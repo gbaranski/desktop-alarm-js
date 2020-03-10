@@ -8,13 +8,13 @@ const { app, BrowserWindow, Menu, ipcMain } = electron;
 // process.env.NODE_ENV = 'production';
 
 let mainWindow;
-let addWindow;
+let settingsWindow;
 //listen for app ready
 app.on('ready', function () {
     // new window
     mainWindow = new BrowserWindow({
         minWidth: 810,
-        minHeight: 600,
+        minHeight: 650,
         webPreferences: {
             nodeIntegration: true
         }
@@ -37,9 +37,9 @@ app.on('ready', function () {
 
 // Handle creat add window
 
-function createAddWindow() {
+function createSettingsWindow() {
     // new window
-    addWindow = new BrowserWindow({
+    settingsWindow = new BrowserWindow({
         width: 800,
         height: 600,
         title: 'Alarm clock menu',
@@ -48,20 +48,20 @@ function createAddWindow() {
         }
     });
     // load html
-    addWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'addWindow.html'),
+    settingsWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'settingsWindow.html'),
         protocol: 'file',
         slashes: true
     }));
-    addWindow.on('close', function () {
-        addWindow = null;
+    settingsWindow.on('close', function () {
+        settingsWindow = null;
     });
 }
 // Catch item:add
 ipcMain.on('item:add', function (e, item) {
     console.log(item)
     mainWindow.webContents.send('item:add', item);
-    addWindow.close()
+    settingsWindow.close()
 });
 
 
@@ -73,7 +73,7 @@ const mainMenuTemplate = [
             {
                 label: 'Add Item',
                 click() {
-                    createAddWindow();
+                    createSettingsWindow();
                 }
             },
             {

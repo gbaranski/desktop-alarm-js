@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Settings</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body onload="getAlarmTonesFromFile();">
+    <div class="container" style="margin-top: 50px;">
+        <div class="input-field col s12">
+            <select>
+                <option id="alarmToneSelect1" value="1"></option>
+                <option id="alarmToneSelect2" value="2"></option>
+                <option id="alarmToneSelect3" value="3"></option>
+            </select>
+            <label>Please specify which sound would you like to use</label>
+        </div>
+    </div>
+    <script>window.$ = window.jQuery = require('jquery');</script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+        $('select').formSelect();
+        });
+
+        function getAlarmTonesFromFile(){
+            const fs = require('fs');
+            let rawJsonData = fs.readFileSync('/home/gbaranski/Documents/appdata/settings.json');
+            let jsonData = JSON.parse(rawJsonData);
+            var alarmToneName1 = jsonData.alarmToneName1;
+            console.log(alarmToneName1);
+            document.getElementById("alarmToneSelect1").innerText = alarmToneName1
+        }
+
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+    
+        const form = document.querySelector('form');
+        form.addEventListener('submit', submitForm);
+        
+        function submitForm(e){
+            e.preventDefault();
+            const item = document.querySelector('#item').value;
+            ipcRenderer.send('item:add', item);
+        }
+    </script>
+</body>
+</html>

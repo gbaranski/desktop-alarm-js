@@ -73,14 +73,15 @@
     'showClearBtn': true
     });
     });
+    called = Boolean(false);
     var alarmTimeFile = "";
     const fs = require('fs');
     function startAlarm() {
         var audio = new Audio('/home/gbaranski/Documents/Helium.wav');
-        if(!called) {
+        if(called == false) {
             audio.play();
+            called = true;
         }
-        var called = true;
         console.log("Alarm time");
     }
     function getTime()  {
@@ -104,7 +105,7 @@
                 startAlarm();
             }else
             {
-                var called = false;
+                called = false;
                 console.log("not alarm time!")
             }
         });
