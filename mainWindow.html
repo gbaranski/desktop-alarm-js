@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm clock</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        .clock {
+        text-align: center;
+        color: white;
+        font-size: 60px;
+        font-family: Orbitron;
+        letter-spacing: 7px;
+        }
+        .alarm-list {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .timepicker {
+            color: white;
+        }
+        .container{
+            margin-top: 20px;
+            background-color: #37474f;
+            border-radius: 20px;
+            padding: 50px;
+        }
+        nav {
+            background-color: #424242 ;
+        }
+    </style>
+</head>
+
+<body onload="getTime(); getAlarmTime();" style="background-color: #212121; ">
+    <nav>
+        <div class="nav-wrapper">
+            <a class="brand-logo center">Alarm clock in javascript GUI</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col s6">
+                <div id="clock" class="clock"></div>
+            </div>
+            <div class="col s6">
+                <div id="alarmTime" class="clock"></div>
+            </div>
+        </div>   
+        <form>
+            <div>
+                <label>Enter alarm time here</label>
+                <input type="text" class="timepicker" id="item" autofocus>
+            </div>
+            <button class="btn waves-effect waves-light" type="submit" onclick="submitForm()">Add item</button>
+        </form>
+    </div>
+
+
+    <ul class="alarm-list"></ul>
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script></script>
+<script>
+    $(document).ready(function() {
+    $('.modal').modal();
+    $('.timepicker').timepicker({
+    'twelveHour': false,
+    'showClearBtn': true
+    });
+    });
+    var alarmTimeFile = "";
+    const fs = require('fs');
+    function startAlarm() {
+        var audio = new Audio('/home/gbaranski/Documents/Helium.wav');
+        if(!called) {
+            audio.play();
+        }
+        var called = true;
+        console.log("Alarm time");
+    }
+    function getTime()  {
+        var date = new Date();
+        var h = date.getHours(); // 0 - 23
+        var m = date.getMinutes(); // 0 - 59
+        var s = date.getSeconds(); // 0 - 59
+
+        h = (h < 10) ? "0" + h : h; 
+        m = (m < 10) ? "0" + m : m; 
+        s = (s < 10) ? "0" + s : s; 
+        var fullTime = h + ":" + m + ":" + s + " ";
+        document.getElementById("clock").innerHTML = "Current time: <br>" + fullTime;
+        alarmTime = document.getElementById("alarmTime").innerText.replace(":", "");
+        fs.readFile('/home/gbaranski/Documents/data.txt', 'utf8', function(err, alarmTimeFile)
+        {
+            var arrayTime = alarmTimeFile.split(":");
+            var alarmHour = arrayTime[0];
+            var alarmMinute = arrayTime[1];
+            if(alarmHour == h && alarmMinute == m)  {
+                startAlarm();
+            }else
+            {
+                var called = false;
+                console.log("not alarm time!")
+            }
+        });
+
+        setTimeout(getTime, 1000);
+    }
+    function getAlarmTime() {
+        fs.readFile('/home/gbaranski/Documents/data.txt', 'utf8', function(err, alarmTimeFile)
+        {
+            console.log(alarmTimeFile);
+            document.getElementById("alarmTime").innerHTML = "Alarm is set to: <br>" + alarmTimeFile;
+        });
+    }
+    function submitForm() {
+        alert("Submitted!")
+        alarmTimeBack = document.getElementById("item").value;
+        fs.writeFile("/home/gbaranski/Documents/data.txt", alarmTimeBack, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log("Saved data to file");
+        });
+    }
+
+    /*
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const ul = document.querySelector('ul');
+    
+    // add item
+    ipcRenderer.on('item:add', function(e,item){
+        ul.className = "collection alarm-list";
+        const li = document.createElement('li');
+        li.className = 'collection-item';
+        const itemText = document.createTextNode(item);
+        li.appendChild(itemText);
+        ul.appendChild(li);
+    });
+    
+    
+    // clear items
+    ipcRenderer.on('item:clear', function(){
+        ul.innerHTML = '';
+        ul.className = '';
+    });
+    
+    
+    
+    // Remove item
+    ul.addEventListener('dblclick', removeItem);
+    function removeItem(e){
+        e.target.remove();
+        if(ul.children.length == 0){
+            ul.className = '';
+        }
+    }
+    */
+</script>
+
+
+</body>
+
+</html>
