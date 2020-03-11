@@ -71,7 +71,7 @@ const mainMenuTemplate = [
         label: 'File',
         submenu: [
             {
-                label: 'Add Item',
+                label: 'Settings',
                 click() {
                     createSettingsWindow();
                 }

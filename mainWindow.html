@@ -33,7 +33,7 @@
     </style>
 </head>
 
-<body onload="getTime(); getAlarmTime();" style="background-color: #212121; ">
+<body onload="getTime(); getAlarmTime(); checkDirectory();" style="background-color: #212121; ">
     <nav>
         <div class="nav-wrapper">
             <a class="brand-logo center">Alarm clock in javascript GUI</a>
@@ -52,7 +52,7 @@
         <form>
             <div>
                 <label>Enter alarm time here</label>
-                <input type="text" class="timepicker" id="item" autofocus>
+                <input type="text" class="timepicker" id="alarmTimeInput" autofocus>
             </div>
             <button class="btn waves-effect waves-light" type="submit" onclick="submitForm()">Add item</button>
         </form>
@@ -73,11 +73,19 @@
     'showClearBtn': true
     });
     });
+    function checkDirectory() {
+        let dir = process.env.HOME + '/.alarmclock/';
+        if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+        }
+    }
     called = Boolean(false);
     var alarmTimeFile = "";
     const fs = require('fs');
+
     function startAlarm() {
-        var audio = new Audio('/home/gbaranski/Documents/Helium.wav');
+        let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+        var audio = new Audio(process.env.HOME + '/.alarmclock/alarmTones/' + jsonData.alarmToneName1 + ".wav");
         if(called == false) {
             audio.play();
             called = true;
@@ -95,8 +103,8 @@
         s = (s < 10) ? "0" + s : s; 
         var fullTime = h + ":" + m + ":" + s + " ";
         document.getElementById("clock").innerHTML = "Current time: <br>" + fullTime;
-        alarmTime = document.getElementById("alarmTime").innerText.replace(":", "");
-        fs.readFile('/home/gbaranski/Documents/data.txt', 'utf8', function(err, alarmTimeFile)
+
+        /*
         {
             var arrayTime = alarmTimeFile.split(":");
             var alarmHour = arrayTime[0];
@@ -109,25 +117,24 @@
                 console.log("not alarm time!")
             }
         });
+        */
 
         setTimeout(getTime, 1000);
     }
     function getAlarmTime() {
-        fs.readFile('/home/gbaranski/Documents/data.txt', 'utf8', function(err, alarmTimeFile)
-        {
-            console.log(alarmTimeFile);
-            document.getElementById("alarmTime").innerHTML = "Alarm is set to: <br>" + alarmTimeFile;
-        });
+        let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+        let alarmTimeJson = jsonData.alarmTime;
+        console.log(process.env.HOME);
+        console.log(alarmTimeJson);
+        document.getElementById("alarmTime").innerHTML = "Alarm is set to: <br>" + alarmTimeJson;
     }
+
     function submitForm() {
         alert("Submitted!")
-        alarmTimeBack = document.getElementById("item").value;
-        fs.writeFile("/home/gbaranski/Documents/data.txt", alarmTimeBack, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log("Saved data to file");
-        });
+        let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '.alarmclock/settings.json'));
+        jsonData.alarmTime = document.getElementById("alarmTimeInput").value;
+        fs.writeFileSync('/home/gbaranski/Documents/appdata/settings.json', JSON.stringify(jsonData));
+
     }
 
     /*
