@@ -17,14 +17,10 @@
     <h2 class="grey-text text-lighten-3 center">Settings</h2>
     <div class="container" style="margin-top: 30px;">
         <div class="row">
-            <div class="input-field col s10">
-                <select id="myDropdown" class="materialSelect">
+            <div class="input-field">
+                <select id="selectDropdown" class="materialSelect">
                 </select>
                 <label>Please specify which alarm tone would you like to use</label>
-            </div>
-            <div class="input-field col">
-                <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#modal1"><i
-                        class="material-icons">add</i></a>
             </div>
         </div>
         <button class="btn waves-effect waves-light" onclick="submitForm();" name="action">Submit
@@ -48,8 +44,8 @@
             const arrayOfFiles = fs.readdirSync(process.env.HOME + '/.alarmclock/alarmTones/')
             arrayOfFiles.forEach(element => {
                 var $newOpt = $("<option>").attr("value", element).text(element)
-                $("#myDropdown").append($newOpt);
-                $("#myDropdown").trigger('contentChanged');
+                $("#selectDropdown").append($newOpt);
+                $("#selectDropdown").trigger('contentChanged');
             });
         }
 
@@ -58,7 +54,6 @@
             let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
             jsonData.alarmTone = document.getElementsByClassName("selected")[0].innerText;
             fs.writeFileSync(process.env.HOME + "/.alarmclock/settings.json", JSON.stringify(jsonData));
-
             const remote = require('electron').remote;
             var window = remote.getCurrentWindow();
             window.close();

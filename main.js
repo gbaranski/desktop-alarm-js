@@ -62,7 +62,10 @@ function createSettingsWindow() {
         settingsWindow = null;
     });
 }
-
+// Handle javascript request
+ipcMain.on('createSettingsWindow', () => {
+    createSettingsWindow();
+});
 
 // new template
 const mainMenuTemplate = [{
