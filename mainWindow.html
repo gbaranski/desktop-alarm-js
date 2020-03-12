@@ -26,13 +26,16 @@
         .timepicker {
             color: white;
         }
+
         .collection-item {
-              vertical-align: middle;
+            vertical-align: middle;
         }
+
         .switch {
             position: absolute;
             right: 1%;
         }
+
         .container {
             margin-top: 20px;
             background-color: #37474f;
@@ -40,6 +43,7 @@
             padding: 40px;
             padding-top: 10px;
         }
+
         #settingsIcon {
             float: right;
             color: white;
@@ -48,6 +52,7 @@
             left: 78%;
             cursor: pointer;
         }
+
         nav {
             background-color: #424242;
         }
@@ -76,6 +81,14 @@
         <ul class="alarm-list" id="collection">
         </ul>
     </div>
+    <!-- MODAL -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h1>Press button</h1>
+            <a href="alarm('stop');" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">stop</i></a>
+        </div>
+    </div>
+
     <script>
         window.$ = window.jQuery = require('jquery');
     </script>
@@ -83,12 +96,12 @@
     <script></script>
     <script>
         $(document).ready(function () {
-            $('.modal').modal();
+            $('#modal').modal();
             $('.timepicker').timepicker({
                 'twelveHour': false,
                 'showClearBtn': true
             });
-            $("#alarmToggle").on("change",function() {
+            $("input:checkbox").on("change", function () {
                 var state = $(this).prop('checked');
                 var value = $(this).prop('value');
                 changeAlarmState(value, state);
@@ -115,22 +128,23 @@
                 fs.writeFileSync(settingsJsonPath, defaultJsonData);
             }
         }
+
         function changeAlarmState(alarmValue, state) {
             var i = 0;
             const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             alarmTimesArray = jsonData['alarmTimes'];
             alarmTimesArray.forEach(element => {
-                if(element.slice(0, 5) == alarmValue.slice(0, 5))
-                {
-                    
+                if (element.slice(0, 5) == alarmValue.slice(0, 5)) {
+                    alert("asda");
                     alarmTimesArray[i] = alarmValue.slice(0, 5) + state;
                     console.log(alarmTimesArray[i]);
                     fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
-                }  
+                }
                 i++;
             });
         }
+
         function openSettings() {
             const {
                 ipcRenderer
@@ -138,15 +152,23 @@
             ipcRenderer.send('createSettingsWindow');
         }
 
-        function startAlarm() {
-            const fs = require('fs');
-            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
+        function alarm(mode) {
             var audio = new Audio(alarmTonesPath + jsonData.alarmTone);
-            if (called == false) {
+            if (mode == 'start') {
+                const fs = require('fs');
+                let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
+                if (called == false) {
+                $('#modal').modal('open');
                 audio.play();
                 called = true;
+                }
+                console.log("Alarm time");
+            }else if(mode == 'stop') {
+                audio.pause();
             }
-            console.log("Alarm time");
+
+            
+
         }
 
         function getTime() {
@@ -161,6 +183,14 @@
             var fullTime = h + ":" + m + ":" + s + " ";
             document.getElementById("clock").innerHTML = fullTime;
             setTimeout(getTime, 1000);
+            const fs = require('fs');
+            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
+            jsonData.alarmTimes.forEach(element => {
+                if (element.slice(0, 2) == h && element.slice(3, 5) == m) {
+                    console.log("Alarm time");
+                    alarm('start');
+                }
+            });
         }
 
         function getAlarmTime() {
@@ -175,7 +205,8 @@
                 span.innerHTML = `
                 <div class="switch" style="text-align: right;">
                     <label>
-                        <input class="switchAlarm` + element.substring(5) + `" type="checkbox" id="alarmToggle" value="` + element + `">
+                        <input class="switchAlarm` + element.substring(5) +
+                    `" type="checkbox" id="alarmToggle" value="` + element + `">
                         <span class="lever"></span>
                     </label>
                 </div>`;
@@ -186,14 +217,14 @@
                 collectionItem.appendChild(span);
                 collectionItem.classList.add("collection-item");
                 document.getElementById("collection").appendChild(collectionItem);
-                
+
             });
             var x = document.getElementsByClassName("switchAlarmtrue")
             console.log(x);
             Array.prototype.forEach.call(x, element => {
                 element.checked = true;
             });
-            
+
         }
 
         function submitForm() {
