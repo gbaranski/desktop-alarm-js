@@ -8,27 +8,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
         .clock {
-        text-align: center;
-        color: white;
-        font-size: 60px;
-        font-family: Orbitron;
-        letter-spacing: 7px;
+            text-align: center;
+            color: white;
+            font-size: 60px;
+            font-family: Orbitron;
+            letter-spacing: 7px;
         }
+
         .alarm-list {
             margin-top: 30px;
             text-align: center;
         }
+
         .timepicker {
             color: white;
         }
-        .container{
+
+        .container {
             margin-top: 20px;
             background-color: #37474f;
             border-radius: 20px;
             padding: 50px;
         }
+
         nav {
-            background-color: #424242 ;
+            background-color: #424242;
         }
     </style>
 </head>
@@ -39,7 +43,7 @@
             <a class="brand-logo center">Alarm clock in javascript GUI</a>
         </div>
     </nav>
-    
+
     <div class="container">
         <div class="row">
             <div class="col s6">
@@ -48,13 +52,15 @@
             <div class="col s6">
                 <div id="alarmTime" class="clock"></div>
             </div>
-        </div>   
+        </div>
         <form>
             <div>
                 <label>Enter alarm time here</label>
                 <input type="text" class="timepicker" id="alarmTimeInput" autofocus>
             </div>
-            <button class="btn waves-effect waves-light" type="submit" onclick="submitForm()">Add item</button>
+            <button class="btn waves-effect waves-light" onclick="submitForm();" name="action">Submit
+                <i class="material-icons right"></i>
+            </button>
         </form>
     </div>
 
@@ -65,112 +71,60 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script></script>
-<script>
-    $(document).ready(function() {
-    $('.modal').modal();
-    $('.timepicker').timepicker({
-    'twelveHour': false,
-    'showClearBtn': true
-    });
-    });
-    function checkDirectory() {
-        let dir = process.env.HOME + '/.alarmclock/';
-        if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-        }
-    }
-    called = Boolean(false);
-    var alarmTimeFile = "";
-    const fs = require('fs');
-
-    function startAlarm() {
-        let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
-        var audio = new Audio(process.env.HOME + '/.alarmclock/alarmTones/' + jsonData.alarmToneName1 + ".wav");
-        if(called == false) {
-            audio.play();
-            called = true;
-        }
-        console.log("Alarm time");
-    }
-    function getTime()  {
-        var date = new Date();
-        var h = date.getHours(); // 0 - 23
-        var m = date.getMinutes(); // 0 - 59
-        var s = date.getSeconds(); // 0 - 59
-
-        h = (h < 10) ? "0" + h : h; 
-        m = (m < 10) ? "0" + m : m; 
-        s = (s < 10) ? "0" + s : s; 
-        var fullTime = h + ":" + m + ":" + s + " ";
-        document.getElementById("clock").innerHTML = "Current time: <br>" + fullTime;
-
-        /*
-        {
-            var arrayTime = alarmTimeFile.split(":");
-            var alarmHour = arrayTime[0];
-            var alarmMinute = arrayTime[1];
-            if(alarmHour == h && alarmMinute == m)  {
-                startAlarm();
-            }else
-            {
-                called = false;
-                console.log("not alarm time!")
-            }
+    <script>
+        $(document).ready(function () {
+            $('.modal').modal();
+            $('.timepicker').timepicker({
+                'twelveHour': false,
+                'showClearBtn': true
+            });
         });
-        */
+        called = Boolean(false);
+        var alarmTimeFile = "";
+        const fs = require('fs');
 
-        setTimeout(getTime, 1000);
-    }
-    function getAlarmTime() {
-        let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
-        let alarmTimeJson = jsonData.alarmTime;
-        console.log(process.env.HOME);
-        console.log(alarmTimeJson);
-        document.getElementById("alarmTime").innerHTML = "Alarm is set to: <br>" + alarmTimeJson;
-    }
-
-    function submitForm() {
-        alert("Submitted!")
-        let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '.alarmclock/settings.json'));
-        jsonData.alarmTime = document.getElementById("alarmTimeInput").value;
-        fs.writeFileSync('/home/gbaranski/Documents/appdata/settings.json', JSON.stringify(jsonData));
-
-    }
-
-    /*
-    const electron = require('electron');
-    const {ipcRenderer} = electron;
-    const ul = document.querySelector('ul');
-    
-    // add item
-    ipcRenderer.on('item:add', function(e,item){
-        ul.className = "collection alarm-list";
-        const li = document.createElement('li');
-        li.className = 'collection-item';
-        const itemText = document.createTextNode(item);
-        li.appendChild(itemText);
-        ul.appendChild(li);
-    });
-    
-    
-    // clear items
-    ipcRenderer.on('item:clear', function(){
-        ul.innerHTML = '';
-        ul.className = '';
-    });
-    
-    
-    
-    // Remove item
-    ul.addEventListener('dblclick', removeItem);
-    function removeItem(e){
-        e.target.remove();
-        if(ul.children.length == 0){
-            ul.className = '';
+        function startAlarm() {
+            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+            var audio = new Audio(process.env.HOME + '/.alarmclock/alarmTones/' + jsonData.alarmTone);
+            if (called == false) {
+                audio.play();
+                called = true;
+            }
+            console.log("Alarm time");
         }
-    }
-    */
-</script>
+
+        function getTime() {
+            var date = new Date();
+            var h = date.getHours(); // 0 - 23
+            var m = date.getMinutes(); // 0 - 59
+            var s = date.getSeconds(); // 0 - 59
+
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+            var fullTime = h + ":" + m + ":" + s + " ";
+            document.getElementById("clock").innerHTML = "Current time: <br>" + fullTime;
+            setTimeout(getTime, 1000);
+        }
+
+        function getAlarmTime() {
+            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+            let alarmTimeJson = jsonData.alarmTime;
+            console.log(alarmTimeJson);
+            document.getElementById("alarmTime").innerHTML = "Alarm is set to: <br>" + alarmTimeJson;
+        }
+
+        function submitForm() {
+            alarmTimeValue = document.getElementById("alarmTimeInput").value;
+            if (alarmTimeValue == "") {
+                alert("Wrong!");
+                return;
+            }
+            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+            jsonData.alarmTime = alarmTimeValue;
+            fs.writeFileSync(process.env.HOME + "/.alarmclock/settings.json", JSON.stringify(jsonData));
+        }
+    </script>
 
 
 </body>

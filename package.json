@@ -12,9 +12,18 @@
   "author": "gbaranski",
   "license": "ISC",
   "dependencies": {
-    "electron": "^8.1.0",
+    "electron": "^8.1.1",
+    "fs": "0.0.1-security",
     "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
-    "materialize-css": "^1.0.0-rc.2"
-  }
+    "materialize-css": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gbaranski/desktop-alarm-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gbaranski/desktop-alarm-js/issues"
+  },
+  "homepage": "https://github.com/gbaranski/desktop-alarm-js#readme"
 }

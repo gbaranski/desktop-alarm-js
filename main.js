@@ -2,7 +2,12 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 
-const { app, BrowserWindow, Menu, ipcMain } = electron;
+const {
+    app,
+    BrowserWindow,
+    Menu,
+    ipcMain
+} = electron;
 
 // SET ENV
 // process.env.NODE_ENV = 'production';
@@ -57,41 +62,32 @@ function createSettingsWindow() {
         settingsWindow = null;
     });
 }
-// Catch item:add
-ipcMain.on('item:add', function (e, item) {
-    console.log(item)
-    mainWindow.webContents.send('item:add', item);
-    settingsWindow.close()
-});
 
 
 // new template
-const mainMenuTemplate = [
-    {
-        label: 'File',
-        submenu: [
-            {
-                label: 'Settings',
-                click() {
-                    createSettingsWindow();
-                }
-            },
-            {
-                label: 'Clear items',
-                click() {
-                    mainWindow.webContents.send('item:clear');
-                }
-            },
-            {
-                label: 'Quit',
-                accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-                click() {
-                    app.quit();
-                }
+const mainMenuTemplate = [{
+    label: 'File',
+    submenu: [{
+            label: 'Settings',
+            click() {
+                createSettingsWindow();
             }
-        ]
-    }
-];
+        },
+        {
+            label: 'Clear items',
+            click() {
+                mainWindow.webContents.send('item:clear');
+            }
+        },
+        {
+            label: 'Quit',
+            accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+            click() {
+                app.quit();
+            }
+        }
+    ]
+}];
 
 if (process.platform == 'darwin') {
     mainMenuTemplate.unshift({});
@@ -101,8 +97,7 @@ if (process.platform == 'darwin') {
 if (process.env.NODE_ENV != 'production') {
     mainMenuTemplate.push({
         label: 'Developer tools',
-        submenu: [
-            {
+        submenu: [{
                 label: 'Toggle developer tools',
                 accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
                 click(item, focusedWindow) {
