@@ -18,10 +18,8 @@
     <div class="container" style="margin-top: 30px;">
         <div class="row">
             <div class="input-field col s10">
-                <select>
+                <select id="myDropdown" class="materialSelect">
                     <option id="alarmToneSelect1" value="1"></option>
-                    <option id="alarmToneSelect2" value="2"></option>
-                    <option id="alarmToneSelect3" value="3"></option>
                 </select>
                 <label>Please specify which alarm tone would you like to use</label>
             </div>
@@ -31,51 +29,27 @@
             </div>
         </div>
     </div>
-    <!--- Modal structure -->
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <h4>Adding new alarm tone</h4>
-            <div class="input-field col s6">
-                <input id="toneName" type="text" style="color: black;">
-                <label for="toneName">Tone name</label>
-                <span id="errorText" class="helper-text"></span>
-            </div>
-            <div class="input-field col s10">
-                <select id="select1" class="materialSelect">
-                    <option id="alarmToneSelect1" value="1"></option>
-                    <option id="alarmToneSelect2" value="2"></option>
-                    <option id="alarmToneSelect3" value="3"></option>
-                </select>
-                <label>Please specify which alarm tone would you like to use</label>
-            </div>
-            <div class="input-field col">
-                <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#modal1"><i
-                        class="material-icons">add</i></a>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a onclick="addTone();" class="waves-effect waves-green btn-flat">Done</a>
-        </div>
-    </div>
-
     <script>
         window.$ = window.jQuery = require('jquery');
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('select').formSelect();
-            $('.modal').modal();
+             $('.materialSelect').formSelect();
         });
+        $('.materialSelect').on('contentChanged', function() {
+        $(this).formSelect();
+        });
+
         
         function getFilesInDirectory() {
             // TODO dynamiclly change <select> tag!
             const fs = require("fs")
             const arrayOfFiles = fs.readdirSync(process.env.HOME + '/.alarmclock/alarmTones/')
             arrayOfFiles.forEach(element => {
-               $selectDropdown .append($("<option></option>").attr("value",value).text(value));
-
-
+                var $newOpt = $("<option>").attr("value",element).text(element)
+                    $("#myDropdown").append($newOpt);
+                    $("#myDropdown").trigger('contentChanged');
             });
         }
         function getAlarmTonesFromFile() {
