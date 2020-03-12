@@ -26,7 +26,13 @@
         .timepicker {
             color: white;
         }
-
+        .collection-item {
+              vertical-align: middle;
+        }
+        .switch {
+            position: absolute;
+            right: 1%;
+        }
         .container {
             margin-top: 20px;
             background-color: #37474f;
@@ -34,7 +40,6 @@
             padding: 40px;
             padding-top: 10px;
         }
-
         #settingsIcon {
             float: right;
             color: white;
@@ -43,14 +48,13 @@
             left: 78%;
             cursor: pointer;
         }
-
         nav {
             background-color: #424242;
         }
     </style>
 </head>
 
-<body onload="getTime(); getAlarmTime();" style="background-color: #212121; ">
+<body onload="setupFiles(); getTime(); getAlarmTime();" style="background-color: #212121; ">
     <nav>
         <div class="nav-wrapper">
             <a class="brand-logo center">Alarm clock in javascript GUI</a>
@@ -84,11 +88,49 @@
                 'twelveHour': false,
                 'showClearBtn': true
             });
+            $("#alarmToggle").on("change",function() {
+                var state = $(this).prop('checked');
+                var value = $(this).prop('value');
+                changeAlarmState(value, state);
+            });
         });
-        called = Boolean(false);
-        var alarmTimeFile = "";
-        const fs = require('fs');
 
+        called = Boolean(false);
+        const settingsJsonPath = process.env.HOME + '/.alarmclock/settings.json';
+        const alarmTonesPath = process.env.HOME + '/.alarmclock/alarmTones/';
+
+        function setupFiles() {
+            const fs = require("fs");
+            var folderDir = process.env.HOME + '/.alarmclock/';
+
+            if (!fs.existsSync(folderDir)) {
+                fs.mkdirSync(folderDir);
+
+            }
+            if (!fs.existsSync(alarmTonesPath)) {
+                fs.mkdirSync(alarmTonesPath);
+            }
+            if (!fs.existsSync(settingsJsonPath)) {
+                const defaultJsonData = "{\"alarmTimes\":[],\"alarmTone\":\"\"}"
+                fs.writeFileSync(settingsJsonPath, defaultJsonData);
+            }
+        }
+        function changeAlarmState(alarmValue, state) {
+            var i = 0;
+            const fs = require('fs');
+            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
+            alarmTimesArray = jsonData['alarmTimes'];
+            alarmTimesArray.forEach(element => {
+                if(element.slice(0, 5) == alarmValue.slice(0, 5))
+                {
+                    
+                    alarmTimesArray[i] = alarmValue.slice(0, 5) + state;
+                    console.log(alarmTimesArray[i]);
+                    fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
+                }  
+                i++;
+            });
+        }
         function openSettings() {
             const {
                 ipcRenderer
@@ -97,8 +139,9 @@
         }
 
         function startAlarm() {
-            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
-            var audio = new Audio(process.env.HOME + '/.alarmclock/alarmTones/' + jsonData.alarmTone);
+            const fs = require('fs');
+            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
+            var audio = new Audio(alarmTonesPath + jsonData.alarmTone);
             if (called == false) {
                 audio.play();
                 called = true;
@@ -121,30 +164,48 @@
         }
 
         function getAlarmTime() {
-            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+            const fs = require('fs');
+            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             var classlist = document.querySelector("#collection")
             if (jsonData.alarmTimes != "") {
                 classlist.className = "collection alarm-list";
             }
             jsonData.alarmTimes.forEach(element => {
-                var collectionItem = document.createElement("LI");
+                var span = document.createElement("span");
+                span.innerHTML = `
+                <div class="switch" style="text-align: right;">
+                    <label>
+                        <input class="switchAlarm` + element.substring(5) + `" type="checkbox" id="alarmToggle" value="` + element + `">
+                        <span class="lever"></span>
+                    </label>
+                </div>`;
+                var textNode = document.createTextNode(element.slice(0, 5));
+                var slicedElementTrue = element.slice(0, 5) + "true";
+                span.appendChild(textNode);
+                var collectionItem = document.createElement("li");
+                collectionItem.appendChild(span);
                 collectionItem.classList.add("collection-item");
-                var textNode = document.createTextNode(element);
-                collectionItem.appendChild(textNode);
                 document.getElementById("collection").appendChild(collectionItem);
-
+                
             });
+            var x = document.getElementsByClassName("switchAlarmtrue")
+            console.log(x);
+            Array.prototype.forEach.call(x, element => {
+                element.checked = true;
+            });
+            
         }
 
         function submitForm() {
+            const fs = require('fs');
             alarmTimeValue = document.getElementById("alarmTimeInput").value;
             if (alarmTimeValue == "") {
                 alert("Wrong!");
                 return;
             }
-            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             jsonData['alarmTimes'].push(alarmTimeValue);
-            fs.writeFileSync(process.env.HOME + "/.alarmclock/settings.json", JSON.stringify(jsonData));
+            fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
         }
     </script>
 

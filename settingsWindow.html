@@ -38,10 +38,11 @@
         $('.materialSelect').on('contentChanged', function () {
             $(this).formSelect();
         });
-
+        const settingsJsonPath = process.env.HOME + '/.alarmclock/settings.json';
+        const alarmTonesPath = process.env.HOME + '/.alarmclock/alarmTones/';
         function getFilesInDirectory() {
             const fs = require("fs")
-            const arrayOfFiles = fs.readdirSync(process.env.HOME + '/.alarmclock/alarmTones/')
+            const arrayOfFiles = fs.readdirSync(alarmTonesPath)
             arrayOfFiles.forEach(element => {
                 var $newOpt = $("<option>").attr("value", element).text(element)
                 $("#selectDropdown").append($newOpt);
@@ -51,9 +52,9 @@
 
         function submitForm() {
             const fs = require("fs")
-            let jsonData = JSON.parse(fs.readFileSync(process.env.HOME + '/.alarmclock/settings.json'));
+            let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             jsonData.alarmTone = document.getElementsByClassName("selected")[0].innerText;
-            fs.writeFileSync(process.env.HOME + "/.alarmclock/settings.json", JSON.stringify(jsonData));
+            fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
             const remote = require('electron').remote;
             var window = remote.getCurrentWindow();
             window.close();
