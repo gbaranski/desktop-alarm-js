@@ -85,9 +85,11 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <h1>Press button</h1>
-            <a href="alarm('stop');" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">stop</i></a>
+            <a onclick="stopAlarm();" class="btn-floating btn-large waves-effect waves-light red"><i
+                    class="material-icons">stop</i></a>
         </div>
     </div>
+    <audio id="audio" class="hidden"></audio>
 
     <script>
         window.$ = window.jQuery = require('jquery');
@@ -96,7 +98,6 @@
     <script></script>
     <script>
         $(document).ready(function () {
-            $('#modal').modal();
             $('.timepicker').timepicker({
                 'twelveHour': false,
                 'showClearBtn': true
@@ -136,9 +137,7 @@
             alarmTimesArray = jsonData['alarmTimes'];
             alarmTimesArray.forEach(element => {
                 if (element.slice(0, 5) == alarmValue.slice(0, 5)) {
-                    alert("asda");
                     alarmTimesArray[i] = alarmValue.slice(0, 5) + state;
-                    console.log(alarmTimesArray[i]);
                     fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
                 }
                 i++;
@@ -151,25 +150,27 @@
             } = require('electron');
             ipcRenderer.send('createSettingsWindow');
         }
-
-        function alarm(mode) {
-            var audio = new Audio(alarmTonesPath + jsonData.alarmTone);
-            if (mode == 'start') {
+        function startAlarm() {            
+            if (called == false) {
                 const fs = require('fs');
                 let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
-                if (called == false) {
+                audio = document.getElementById("audio");
+                audioFile = alarmTonesPath + jsonData.alarmTone;
+                audio.src = audioFile
+                audio.loop = true;
+                $('#modal').modal();
                 $('#modal').modal('open');
                 audio.play();
                 called = true;
-                }
-                console.log("Alarm time");
-            }else if(mode == 'stop') {
-                audio.pause();
             }
-
-            
-
         }
+        function stopAlarm() {
+            audio = document.getElementById("audio");
+            audio.pause();
+            $('#modal').modal();
+            $('#modal').modal('close');
+        }
+
 
         function getTime() {
             var date = new Date();
@@ -186,9 +187,10 @@
             const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             jsonData.alarmTimes.forEach(element => {
-                if (element.slice(0, 2) == h && element.slice(3, 5) == m) {
+                var chuj123 = element.substring(5)
+                if (element.slice(0, 2) == h && element.slice(3, 5) == m && element.substring(5) == "true") {
                     console.log("Alarm time");
-                    alarm('start');
+                    startAlarm();
                 }
             });
         }
@@ -206,7 +208,7 @@
                 <div class="switch" style="text-align: right;">
                     <label>
                         <input class="switchAlarm` + element.substring(5) +
-                    `" type="checkbox" id="alarmToggle" value="` + element + `">
+                    `" type="checkbox" id="alarmToggle" value="` + element + "false" + `">
                         <span class="lever"></span>
                     </label>
                 </div>`;
@@ -219,9 +221,9 @@
                 document.getElementById("collection").appendChild(collectionItem);
 
             });
-            var x = document.getElementsByClassName("switchAlarmtrue")
-            console.log(x);
-            Array.prototype.forEach.call(x, element => {
+            var switchTrue = document.getElementsByClassName("switchAlarmtrue")
+            console.log(switchTrue);
+            Array.prototype.forEach.call(switchTrue, element => {
                 element.checked = true;
             });
 
@@ -235,7 +237,7 @@
                 return;
             }
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
-            jsonData['alarmTimes'].push(alarmTimeValue);
+            jsonData['alarmTimes'].push(alarmTimeValue + "false");
             fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
         }
     </script>
