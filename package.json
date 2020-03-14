@@ -1,26 +1,30 @@
 {
   "name": "alarm-clock",
+  "productName": "Alarm-Clock",
   "version": "1.0.0",
-  "description": "Desktop alarm clock in Electron Framework",
+  "license": "MIT",
   "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "package-linux": "electron-packager .  electron-alarm-clock --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icon.png --prune=true --out=release-builds",
-    "package-windows": "electron-packager . alarm-clock-electron --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icon.png --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Alarm-clock\"",
-    "package-macos": ""
+  "author": {
+    "name": "gbaranski",
+    "email": "gbaranski19@gmail.com",
+    "url": "https://gbaranski.com"
   },
-  "keywords": [
-    "alarmclock",
-    "alarm-clock",
-    "clock"
-  ],
-  "author": "gbaranski",
-  "license": "ISC",
+  "devDependencies": {
+    "electron": "^1.4.3",
+    "electron-packager": "^8.1.0"
+  },
   "dependencies": {
     "fs": "0.0.1-security",
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0"
   },
+  "keywords": [
+    "electron",
+    "alarm",
+    "alarmclock",
+    "clock",
+    "javascript"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gbaranski/desktop-alarm-js.git"
@@ -28,9 +32,10 @@
   "bugs": {
     "url": "https://github.com/gbaranski/desktop-alarm-js/issues"
   },
-  "homepage": "https://github.com/gbaranski/desktop-alarm-js#readme",
-  "devDependencies": {
-    "electron": "^8.1.1",
-    "electron-packager": "^14.2.1"
+  "scripts": {
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icon.png --prune=true --out=release-builds",
+    "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icon.png  --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\"",
+    "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icon.png --prune=true --out=release-builds"
   }
 }

@@ -1,0 +1,39 @@
+{
+    "name": "alarm-clock-electron",
+    "version": "1.0.0",
+    "description": "alarm-clock-electron",
+    "license": "MIT",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-packager . AlarmClock"
+    },
+    "author": {
+        "name": "gbaranski",
+        "email": "gbaranski19@gmail.com",
+        "url": "https://gbaranski.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gbaranski/desktop-alarm-js.git"
+    },
+    "bugs": {
+        "url": "https://github.com/gbaranski/desktop-alarm-js/issues"
+    },
+    "keywords": [
+        "electron",
+        "alarm",
+        "alarmclock",
+        "clock",
+        "javascript"
+    ],
+    "dependencies": {
+        "fs": "0.0.1-security",
+        "jquery": "^3.4.1",
+        "materialize-css": "^1.0.0"
+    },
+    "devDependencies": {
+        "electron": "^8.1.1",
+        "electron-packager": "^14.2.1"
+    }
+}
