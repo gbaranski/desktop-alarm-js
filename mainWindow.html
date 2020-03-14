@@ -74,7 +74,7 @@
 <body onload="setupFiles(); getTime(); getAlarmTime();" style="background-color: #212121; ">
     <nav>
         <div class="nav-wrapper">
-            <a class="brand-logo center">Alarm clock in javascript GUI</a>
+            <a class="brand-logo center">Alarm clock</a>
         </div>
     </nav>
     <div class="container">
@@ -121,7 +121,6 @@
             $('.collection-item').on("dblclick", function(){
             $(this).remove();
             var output = $(this).find("input");
-            console.log(output[0].value)
             removeAlarm(output[0].value)
             });
         });
@@ -156,11 +155,11 @@
             var i = 0;
             alarmTimesArray.forEach(element => {
                 if(element == alarmName) {
-                    delete alarmTimesArray[i];
-                    fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
+                    alarmTimesArray.splice(i, 1)
                 }
                 i++;
             });
+            fs.writeFileSync(settingsJsonPath, JSON.stringify(jsonData));
         }
 
         function changeAlarmState(alarmValue, state) {
@@ -192,7 +191,9 @@
                 audioFile = alarmTonesPath + jsonData.alarmTone;
                 audio.src = audioFile
                 audio.loop = true;
-                $('#modal').modal();
+                $('#modal').modal({
+                     dismissible: false
+                });
                 $('#modal').modal('open');
                 audio.play();
                 called = true;
@@ -224,7 +225,6 @@
             jsonData.alarmTimes.forEach(element => {
                 var chuj123 = element.substring(5)
                 if (element.slice(0, 2) == h && element.slice(3, 5) == m && element.substring(5) == "true") {
-                    console.log("Alarm time");
                     startAlarm();
                 }
             });
@@ -259,7 +259,6 @@
 
             });
             var switchTrue = document.getElementsByClassName("switchAlarmtrue")
-            console.log(switchTrue);
             Array.prototype.forEach.call(switchTrue, element => {
                 element.checked = true;
             });

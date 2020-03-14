@@ -69,36 +69,26 @@ ipcMain.on('createSettingsWindow', () => {
 
 // new template
 const mainMenuTemplate = [{
-    label: 'File',
-    submenu: [{
-            label: 'Settings',
-            click() {
-                createSettingsWindow();
+        label: 'File',
+        submenu: [{
+                label: 'Settings',
+                click() {
+                    createSettingsWindow();
+                }
+            },
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Quit',
+                accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+                click() {
+                    app.quit();
+                }
             }
-        },
-        {
-            label: 'Clear items',
-            click() {
-                mainWindow.webContents.send('item:clear');
-            }
-        },
-        {
-            label: 'Quit',
-            accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-            click() {
-                app.quit();
-            }
-        }
-    ]
-}];
-
-if (process.platform == 'darwin') {
-    mainMenuTemplate.unshift({});
-}
-
-// add developer tools item if not in prod
-if (process.env.NODE_ENV != 'production') {
-    mainMenuTemplate.push({
+        ]
+    },
+    {
         label: 'Developer tools',
         submenu: [{
                 label: 'Toggle developer tools',
@@ -111,5 +101,9 @@ if (process.env.NODE_ENV != 'production') {
                 role: 'reload'
             }
         ]
-    });
+    }
+];
+
+if (process.platform == 'darwin') {
+    mainMenuTemplate.unshift({});
 }

@@ -1,7 +1,7 @@
 {
-  "name": "alarmjs",
+  "name": "alarmclock",
   "version": "1.0.0",
-  "description": "desktop alarm in js",
+  "description": "Desktop alarm clock in Electron Framework",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
@@ -14,7 +14,6 @@
   "dependencies": {
     "electron": "^8.1.1",
     "fs": "0.0.1-security",
-    "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0"
   },
@@ -25,5 +24,9 @@
   "bugs": {
     "url": "https://github.com/gbaranski/desktop-alarm-js/issues"
   },
-  "homepage": "https://github.com/gbaranski/desktop-alarm-js#readme"
+  "homepage": "https://github.com/gbaranski/desktop-alarm-js#readme",
+  "devDependencies": {
+    "electron": "^8.1.1",
+    "electron-packager": "^14.2.1"
+  }
 }
