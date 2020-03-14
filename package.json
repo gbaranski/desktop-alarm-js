@@ -1,18 +1,22 @@
 {
-  "name": "alarmclock",
+  "name": "alarm-clock",
   "version": "1.0.0",
   "description": "Desktop alarm clock in Electron Framework",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-linux": "electron-packager .  electron-alarm-clock --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icon.png --prune=true --out=release-builds",
+    "package-windows": "electron-packager . alarm-clock-electron --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icon.png --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Alarm-clock\"",
+    "package-macos": ""
   },
   "keywords": [
-    "javascript"
+    "alarmclock",
+    "alarm-clock",
+    "clock"
   ],
   "author": "gbaranski",
   "license": "ISC",
   "dependencies": {
-    "electron": "^8.1.1",
     "fs": "0.0.1-security",
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0"
