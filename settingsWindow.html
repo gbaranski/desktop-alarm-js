@@ -26,6 +26,9 @@
         <button class="btn waves-effect waves-light" onclick="submitForm();" name="action">Submit
             <i class="material-icons right">send</i>
         </button>
+        <button class="btn waves-effect waves-light" onclick="openFolder();" name="action">Open in folder
+            <i class="material-icons right">folder</i>
+        </button>
     </div>
     <script>
         window.$ = window.jQuery = require('jquery');
@@ -40,6 +43,7 @@
         });
         const settingsJsonPath = process.env.HOME + '/.alarmclock/settings.json';
         const alarmTonesPath = process.env.HOME + '/.alarmclock/alarmTones/';
+
         function getFilesInDirectory() {
             const fs = require("fs")
             const arrayOfFiles = fs.readdirSync(alarmTonesPath)
@@ -47,6 +51,18 @@
                 var $newOpt = $("<option>").attr("value", element).text(element)
                 $("#selectDropdown").append($newOpt);
                 $("#selectDropdown").trigger('contentChanged');
+            });
+        }
+
+        function openFolder() {
+            const openExplorer = require('open-file-explorer');
+            const path = alarmTonesPath;
+            openExplorer(path, err => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    //Do Something
+                }
             });
         }
 

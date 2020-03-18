@@ -103,7 +103,3 @@ const mainMenuTemplate = [{
         ]
     }
 ];
-
-if (process.platform == 'darwin') {
-    mainMenuTemplate.unshift({});
-}

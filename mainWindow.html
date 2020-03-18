@@ -19,13 +19,15 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 7px;
             vertical-align: middle;
-            
+
         }
+
         .timepicker {
             color: white;
         }
+
         .collection-item {
-            
+
             vertical-align: middle !important;
             background-color: #e0e0e0 !important;
             padding: 15px 20px !important;
@@ -86,9 +88,9 @@
                 <label>Enter alarm time here</label>
                 <input type="text" class="timepicker" id="alarmTimeInput" autofocus>
             </div>
-                <button class="btn waves-effect waves-light" onclick="submitForm();" name="action">Submit
-                    <i class="material-icons right">send</i>
-                </button>
+            <button class="btn waves-effect waves-light" onclick="submitForm();" name="action">Submit
+                <i class="material-icons right">send</i>
+            </button>
         </form>
         <ul class="alarm-list" id="collection">
         </ul>
@@ -118,10 +120,10 @@
                 var value = $(this).prop('value');
                 changeAlarmState(value, state);
             });
-            $('.collection-item').on("dblclick", function(){
-            $(this).remove();
-            var output = $(this).find("input");
-            removeAlarm(output[0].value)
+            $('.collection-item').on("dblclick", function () {
+                $(this).remove();
+                var output = $(this).find("input");
+                removeAlarm(output[0].value)
             });
         });
 
@@ -146,7 +148,7 @@
                 fs.writeFileSync(settingsJsonPath, defaultJsonData);
             }
         }
-        
+
         function removeAlarm(alarmName) {
             const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
@@ -154,7 +156,7 @@
             console.log(alarmTimesArray);
             var i = 0;
             alarmTimesArray.forEach(element => {
-                if(element == alarmName) {
+                if (element == alarmName) {
                     alarmTimesArray.splice(i, 1)
                 }
                 i++;
@@ -192,7 +194,7 @@
                 audio.src = audioFile
                 audio.loop = true;
                 $('#modal').modal({
-                     dismissible: false
+                    dismissible: false
                 });
                 $('#modal').modal('open');
                 audio.play();
