@@ -108,8 +108,12 @@
         window.$ = window.jQuery = require('jquery');
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-    <script></script>
     <script>
+        const os = require('os');
+        const fs = require("fs");
+        const settingsJsonPath = os.homedir() + (process.platform == 'win32' ? '\\.alarmclock\\settings.json' : '/.alarmclock/settings.json'); 
+        const alarmTonesPath = os.homedir() + (process.platform == 'win32' ? '\\.alarmclock\\alarmTones' : '/.alarmclock/alarmTones'); 
+
         $(document).ready(function () {
             $('.timepicker').timepicker({
                 'twelveHour': false,
@@ -127,14 +131,9 @@
             });
         });
 
-
         called = Boolean(false);
-        const settingsJsonPath = process.env.HOME + '/.alarmclock/settings.json';
-        const alarmTonesPath = process.env.HOME + '/.alarmclock/alarmTones/';
-
         function setupFiles() {
-            const fs = require("fs");
-            var folderDir = process.env.HOME + '/.alarmclock/';
+            var folderDir = os.homedir() + '/.alarmclock/';
 
             if (!fs.existsSync(folderDir)) {
                 fs.mkdirSync(folderDir);
@@ -150,7 +149,6 @@
         }
 
         function removeAlarm(alarmName) {
-            const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             alarmTimesArray = jsonData['alarmTimes'];
             console.log(alarmTimesArray);
@@ -166,7 +164,6 @@
 
         function changeAlarmState(alarmValue, state) {
             var i = 0;
-            const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             alarmTimesArray = jsonData['alarmTimes'];
             alarmTimesArray.forEach(element => {
@@ -187,7 +184,6 @@
 
         function startAlarm() {
             if (called == false) {
-                const fs = require('fs');
                 let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
                 audio = document.getElementById("audio");
                 audioFile = alarmTonesPath + jsonData.alarmTone;
@@ -222,7 +218,6 @@
             var fullTime = h + ":" + m + ":" + s + " ";
             document.getElementById("clock").innerHTML = fullTime;
             setTimeout(getTime, 1000);
-            const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             jsonData.alarmTimes.forEach(element => {
                 var chuj123 = element.substring(5)
@@ -233,7 +228,6 @@
         }
 
         function getAlarmTime() {
-            const fs = require('fs');
             let jsonData = JSON.parse(fs.readFileSync(settingsJsonPath));
             var classlist = document.querySelector("#collection")
             if (jsonData.alarmTimes != "") {
@@ -268,7 +262,6 @@
         }
 
         function submitForm() {
-            const fs = require('fs');
             alarmTimeValue = document.getElementById("alarmTimeInput").value;
             if (alarmTimeValue == "") {
                 alert("Wrong!");

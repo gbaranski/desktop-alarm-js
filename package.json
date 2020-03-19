@@ -24,11 +24,10 @@
     "build-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/icon.icns --prune=true --out=release-builds"
   },
   "dependencies": {
-    "fs": "0.0.1-security",
-    "jquery": "^3.4.1",
+    "fs": "latest",
+    "jquery": "latest",
     "materialize-css": "^1.0.0",
-    "open-file-explorer": "^1.0.2",
-    "shell": "^0.5.0"
+    "open-file-explorer": "^1.0.2"
   },
   "devDependencies": {
     "electron": "^8.1.1",
