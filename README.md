@@ -1,5 +1,7 @@
 # desktop-alarm-js
 Desktop alarm in javascript using electron framework
+# thats old shit, should be archived
+
 # How to use
 ```
 $ git clone https://github.com/gbaranski/desktop-alarm-js.git
